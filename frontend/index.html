@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#e74c3c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>点菜系统</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div id="app">
+  <!-- Header -->
+  <header id="app-header">
+    <button id="back-btn" class="header-btn" style="display:none">‹</button>
+    <h1 id="app-title">点菜系统</h1>
+    <button id="menu-btn" class="header-btn">☰</button>
+  </header>
+
+  <!-- Sidebar Navigation -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <h2>点菜系统</h2>
+    </div>
+    <ul class="sidebar-menu">
+      <li data-view="menu" class="active"><span class="icon">🍽</span> 点菜</li>
+      <li data-view="orders"><span class="icon">📋</span> 订单</li>
+      <li data-view="manage"><span class="icon">⚙</span> 管理菜单</li>
+    </ul>
+    <div class="sidebar-footer">
+      <p id="connection-status" class="status-disconnected">未连接</p>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <!-- ===== MENU VIEW ===== -->
+    <section id="view-menu" class="view active">
+      <div class="category-tabs" id="category-tabs"></div>
+      <div class="menu-items" id="menu-items"></div>
+    </section>
+
+    <!-- ===== ORDERS VIEW ===== -->
+    <section id="view-orders" class="view">
+      <div class="orders-list" id="orders-list"></div>
+    </section>
+
+    <!-- ===== MANAGE VIEW ===== -->
+    <section id="view-manage" class="view">
+      <div class="manage-tools">
+        <button id="add-category-btn" class="btn btn-sm">+ 添加分类</button>
+        <button id="add-dish-btn" class="btn btn-primary btn-sm">+ 添加菜品</button>
+      </div>
+      <div id="manage-items"></div>
+    </section>
+
+    <!-- ===== CART VIEW (overlay) ===== -->
+    <section id="view-cart" class="view overlay-view">
+      <div class="cart-content">
+        <div class="cart-header">
+          <h2>购物车</h2>
+          <button id="cart-close" class="btn btn-sm">关闭</button>
+        </div>
+        <div id="cart-items"></div>
+        <div class="cart-note">
+          <textarea id="order-note" placeholder="订单备注（选填）"></textarea>
+        </div>
+        <div class="cart-footer">
+          <span id="cart-total">合计: ¥0.00</span>
+          <button id="submit-order-btn" class="btn btn-primary">提交订单</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ORDER DETAIL VIEW (overlay) ===== -->
+    <section id="view-order-detail" class="view overlay-view">
+      <div id="order-detail-content"></div>
+    </section>
+
+    <!-- ===== DISH FORM MODAL ===== -->
+    <div id="dish-modal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h3 id="dish-modal-title">添加菜品</h3>
+        <form id="dish-form">
+          <input type="hidden" id="dish-id">
+          <div class="form-group">
+            <label>菜品名称</label>
+            <input type="text" id="dish-name" required>
+          </div>
+          <div class="form-group">
+            <label>价格 (¥)</label>
+            <input type="number" id="dish-price" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>分类</label>
+            <select id="dish-category"></select>
+          </div>
+          <div class="form-group">
+            <label>描述</label>
+            <textarea id="dish-description"></textarea>
+          </div>
+          <div class="form-group">
+            <label>图片</label>
+            <input type="file" id="dish-image" accept="image/*">
+            <div id="dish-image-preview"></div>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="dish-form-cancel" class="btn">取消</button>
+            <button type="submit" class="btn btn-primary">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ===== CATEGORY FORM MODAL ===== -->
+    <div id="category-modal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h3>添加分类</h3>
+        <form id="category-form">
+          <div class="form-group">
+            <label>分类名称</label>
+            <input type="text" id="category-name" required>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="category-form-cancel" class="btn">取消</button>
+            <button type="submit" class="btn btn-primary">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Cart Bar (floating bottom) -->
+  <div id="cart-bar">
+    <span id="cart-count">0</span>
+    <span id="cart-bar-text">购物车</span>
+    <span id="cart-bar-total">¥0.00</span>
+    <button id="cart-bar-btn" class="btn btn-primary">查看</button>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast"></div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/socket.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
