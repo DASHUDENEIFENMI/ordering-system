@@ -1,0 +1,17 @@
+services:
+  ordering-system:
+    image: node:20-alpine
+    container_name: ordering-system
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    volumes:
+      - /vol1/1000/ordering-system:/app
+      - ordering-data:/app/backend/uploads
+    working_dir: /app/backend
+    command: ["sh", "-c", "npm install && node server.js"]
+    restart: unless-stopped
+
+volumes:
+  ordering-data:
